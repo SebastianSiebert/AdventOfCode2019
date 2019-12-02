@@ -10,6 +10,7 @@ public class Day2 {
 	private static final int OPCODE_END = 99;
 	private static final int INCREMENT = 4;
     private static ArrayList<Integer> intcodes = new ArrayList<Integer>();
+	private static ArrayList<Integer> intcodesBackup;
 	
 
     public static void main(String[] args) throws Exception {
@@ -31,18 +32,44 @@ public class Day2 {
 			for (String value : values)
 				intcodes.add(Integer.parseInt(value));
         }
+		
+		intcodesBackup = new ArrayList<Integer>(intcodes);
     }
 
     private static void puzzle1() {
-        int pos = 0;
+        calculateValue(0);
 		
-		while (pos < intcodes.size()) {
+		System.out.println("Value at pos 0: " + intcodes.get(0));
+    }
+
+    private static void puzzle2() {
+        
+		for (int i = 0; i < 100; i++) {
+			for (int j = 1; j < 100; j++) {
+				intcodes = new ArrayList<Integer>(intcodesBackup);
+				//System.out.println(i + ";" + j);
+				intcodes.set(1,i);
+				intcodes.set(2,j);
+				calculateValue(0);
+				if (intcodes.get(0) == 19690720) break;
+			}
+			if (intcodes.get(0) == 19690720) break;
+		}
+		System.out.println("Value at pos 0: " + intcodes.get(0) 
+			+ "; Value at pos 1: " + intcodes.get(1)
+			+ "; Value at pos 2: " + intcodes.get(2));
+    }
+	
+	private static void calculateValue(int pos) {
+		while (pos+3 < intcodes.size()) {
 			int intcode = intcodes.get(pos);
 			if (intcode == OPCODE_END) break;
 			
 			int pos1 = intcodes.get(pos+1);
 			int pos2 = intcodes.get(pos+2);
 			int pos3 = intcodes.get(pos+3);
+			
+			if (pos1 >= intcodes.size() || pos2 >= intcodes.size() || pos3 >= intcodes.size()) break;
 			
 			if (intcode == OPCODE_ADD) 
 				intcodes.set(pos3, intcodes.get(pos1) + intcodes.get(pos2));
@@ -51,12 +78,6 @@ public class Day2 {
 			
 			pos += INCREMENT;
 		}
-		
-		System.out.println("Value at pos 0: " + intcodes.get(0));
-    }
-
-    private static void puzzle2() {
-        
-    }
+	}
 }
 
