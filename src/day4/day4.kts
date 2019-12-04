@@ -1,6 +1,8 @@
 val validPasswords: ArrayList<Int> = ArrayList<Int>()
+val validPasswords2: ArrayList<Int> = ArrayList<Int>()
 val start: Int = 271973
 val end: Int = 785961
+val validRange = start..end
 
 fun isSixDigets(current: Int): Boolean = current.toString().length == 6
 
@@ -17,6 +19,28 @@ fun twoAdjacentDigitsAreTheSame(current: Int): Boolean {
     return false
 }
 
+fun exactlyTwoAdjacentDigits(current: Int): Boolean {
+    val currentString = current.toString()
+    var number: Int = -1
+    var count: Int = 0
+
+    for (index in 0..currentString.length-1) {
+        val curNumber = currentString.get(index).toInt()
+        if (curNumber != number) {
+            if (count == 2)
+                return true
+            number = curNumber
+            count = 1
+        }
+        else {
+            count++
+        }
+
+    }
+
+    return count == 2
+}
+
 fun digitsAreIncreasing(current: Int): Boolean {
     val currentString = current.toString()
 
@@ -29,8 +53,6 @@ fun digitsAreIncreasing(current: Int): Boolean {
 
 
 // Puzzle 1
-val validRange = start..end
-
 for (current in validRange) {
     if (isSixDigets(current) &&
             isWithinRange(current)
@@ -39,7 +61,16 @@ for (current in validRange) {
         validPasswords.add(current)
 }
 
+println("Number of valid Passwords: ${validPasswords.size}")
 
-println("Number of valid Password: ${validPasswords.size}")
 
+// Puzzle 2
+for (current in validRange) {
+    if (isSixDigets(current) &&
+            isWithinRange(current)
+            && exactlyTwoAdjacentDigits(current)
+            && digitsAreIncreasing(current))
+        validPasswords2.add(current)
+}
 
+println("Number of valid Passwords: ${validPasswords2.size}")
